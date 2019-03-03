@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WhatShouldWePlayMVCNoAuth.Models.Friend>  
+  
+@{  
+    ViewBag.Title = "Friends";  
+}  
+  
+<div class="form-horizontal">  
+  
+    <hr />  
+    <div class="form-group">  
+  
+  
+        <table class="table table-responsive" style="width:400px">  
+            <tr>  
+                <th>  
+                    @Html.DisplayNameFor(model => model.SteamId)  
+                </th>  
+                <th>  
+                    @Html.DisplayNameFor(model => model.Relationship)  
+                </th>
+                <th>  
+                    @Html.DisplayNameFor(model => model.Friend_Since)
+                </th>  
+                  
+            </tr>  
+  
+            @foreach (var item in Model) {  
+                <tr>  
+                    <td>  
+                        @Html.DisplayFor(modelItem => item.SteamId)  
+                    </td>  
+                    <td>  
+                        @Html.DisplayFor(modelItem => item.Relationship)  
+                    </td>  
+                    <td>  
+                        @Html.DisplayFor(modelItem => item.Friend_Since)  
+                    </td>  
+                </tr>  
+}  
+  
+        </table>  
+    </div>  
+</div>

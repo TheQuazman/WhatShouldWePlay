@@ -8,6 +8,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+keys.config
+Web.Debug.config
+Web.Release.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
