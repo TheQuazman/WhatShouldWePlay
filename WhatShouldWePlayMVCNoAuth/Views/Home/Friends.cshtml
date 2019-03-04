@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WhatShouldWePlayMVCNoAuth.Models.Friend>  
+﻿@model IEnumerable<WhatShouldWePlayMVCNoAuth.Models.SteamUser>  
   
 @{  
     ViewBag.Title = "Friends";  
@@ -13,31 +13,31 @@
         <table class="table table-responsive" style="width:400px">  
             <tr>  
                 <th>  
-                    @Html.DisplayNameFor(model => model.SteamId)  
+                    @Html.DisplayNameFor(model => model.SteamID)  
                 </th>  
                 <th>  
-                    @Html.DisplayNameFor(model => model.Relationship)  
+                    @Html.DisplayNameFor(model => model.Avatar)  
                 </th>
                 <th>  
-                    @Html.DisplayNameFor(model => model.Friend_Since)
+                    @Html.DisplayNameFor(model => model.PersonaName)
                 </th>  
                   
             </tr>  
   
-            @foreach (var item in Model) {  
+            @foreach (var item in Model)
+            {
                 <tr>  
                     <td>  
-                        @Html.DisplayFor(modelItem => item.SteamId)  
+                        @Html.DisplayFor(modelItem => item.SteamID)  
                     </td>  
                     <td>  
-                        @Html.DisplayFor(modelItem => item.Relationship)  
+                        <img src="@Html.DisplayFor(modelItem => item.Avatar)" alt="@Html.DisplayNameFor(model => model.Avatar)"/> 
                     </td>  
                     <td>  
-                        @Html.DisplayFor(modelItem => item.Friend_Since)  
+                        @Html.DisplayFor(modelItem => item.PersonaName)  
                     </td>  
                 </tr>  
-}  
-  
-        </table>  
+            }
+        </table>
     </div>  
 </div>

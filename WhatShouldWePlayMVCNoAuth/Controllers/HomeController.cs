@@ -69,8 +69,10 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         public async Task<ActionResult> Friends()
         {
             var friends = await GetFriends();
-            
-            return View(friends);
+
+            var userSummaries = await GetUserSummaries(friends);
+
+            return View(userSummaries);
         }
 
         public async Task<List<Friend>> GetFriends()
@@ -92,7 +94,6 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
 
                 //Deserializing the response recieved from web api and storing into the Employee list  
                 friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJsonString);
-
             }
 
             return friends;
@@ -102,25 +103,23 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         {
             var steamUsers = new List<SteamUser>();
 
-            foreach (var friend in friends)
+            var steamIds = string.Join(",", friends.Select(a => a.SteamId));
+
+            //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
+            var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetPlayerSummaries/v2/?key={0}&steamids={1}", _key, steamIds));
+
+            //Checking the response is successful or not which is sent using HttpClient  
+            if (response.IsSuccessStatusCode)
             {
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-                var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetFriendList/v1/?key={0}&steamid={1}", _key, _steamId));
+                //Storing the response details recieved from web api   
+                var steamUsersResponseContent = response.Content.ReadAsStringAsync().Result;
 
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (response.IsSuccessStatusCode)
-                {
-                    //Storing the response details recieved from web api   
-                    var friendsResponseContent = response.Content.ReadAsStringAsync().Result;
+                JObject steamUsersJsonObject = JsonConvert.DeserializeObject<JObject>(steamUsersResponseContent);
 
-                    JObject friendsJsonObject = JsonConvert.DeserializeObject<JObject>(friendsResponseContent);
+                string steamUsersJsonString = steamUsersJsonObject["response"]["players"].ToString();
 
-                    string friendsJsonString = friendsJsonObject["friendslist"]["friends"].ToString();
-
-                    //Deserializing the response recieved from web api and storing into the Employee list  
-                    steamUsers = JsonConvert.DeserializeObject<List<SteamUser>>(friendsJsonString);
-
-                }
+                //Deserializing the response recieved from web api and storing into the Employee list  
+                steamUsers = JsonConvert.DeserializeObject<List<SteamUser>>(steamUsersJsonString);
             }
 
             return steamUsers;
