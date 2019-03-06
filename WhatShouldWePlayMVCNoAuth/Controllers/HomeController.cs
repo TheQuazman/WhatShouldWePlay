@@ -68,14 +68,16 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
 
         public async Task<ActionResult> Friends()
         {
-            var friends = await GetFriends();
-
-            var userSummaries = await GetUserSummaries(friends);
-
+            var friends = await GetFriendList();
+            var userSummaries = await GetPlayerSummaries(friends.Select(f => f.SteamId));
             return View(userSummaries);
         }
 
-        public async Task<List<Friend>> GetFriends()
+        /// <summary>
+        /// Gets the logged in user's friend list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Friend>> GetFriendList()
         {
             var friends = new List<Friend>();
 
@@ -99,28 +101,40 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
             return friends;
         }
 
-        public async Task<List<SteamUser>> GetUserSummaries(List<Friend> friends)
+        /// <summary>
+        /// Get player summaries for all given Steam ID's
+        /// </summary>
+        /// <param name="steamIds">The Steam ID's to get summaries for.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<PlayerSummary>> GetPlayerSummaries(IEnumerable<string> steamIds)
         {
-            var steamUsers = new List<SteamUser>();
+            var steamUsers = new List<PlayerSummary>();
+            var steamIdArgStrings = new List<string>();
 
-            var steamIds = string.Join(",", friends.Select(a => a.SteamId));
-
-            //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-            var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetPlayerSummaries/v2/?key={0}&steamids={1}", _key, steamIds));
-
-            //Checking the response is successful or not which is sent using HttpClient  
-            if (response.IsSuccessStatusCode)
+            //Can only pass 100 steam ID's at a time, so iterate through until entire friends list is taken care of
+            for (int i = 0; i < steamIds.Count(); i += 100)
             {
-                //Storing the response details recieved from web api   
-                var steamUsersResponseContent = response.Content.ReadAsStringAsync().Result;
+                //Using Skip and Take to take 100 item slices of the entire Steam ID list passed in
+                var steamIdsArg = string.Join(",", steamIds.Skip(i).Take(i + 100));
 
-                JObject steamUsersJsonObject = JsonConvert.DeserializeObject<JObject>(steamUsersResponseContent);
+                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
+                var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetPlayerSummaries/v2/?key={0}&steamids={1}", _key, steamIdsArg));
 
-                string steamUsersJsonString = steamUsersJsonObject["response"]["players"].ToString();
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (response.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var steamUsersResponseContent = response.Content.ReadAsStringAsync().Result;
 
-                //Deserializing the response recieved from web api and storing into the Employee list  
-                steamUsers = JsonConvert.DeserializeObject<List<SteamUser>>(steamUsersJsonString);
+                    JObject steamUsersJsonObject = JsonConvert.DeserializeObject<JObject>(steamUsersResponseContent);
+
+                    string steamUsersJsonString = steamUsersJsonObject["response"]["players"].ToString();
+
+                    //Deserializing the response recieved from web api and storing into the Employee list  
+                    steamUsers.AddRange(JsonConvert.DeserializeObject<List<PlayerSummary>>(steamUsersJsonString));
+                }
             }
+            
 
             return steamUsers;
         }

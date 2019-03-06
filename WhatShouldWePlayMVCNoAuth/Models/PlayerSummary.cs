@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WhatShouldWePlayMVCNoAuth.Models
 {
-    public class SteamUser
+    public class PlayerSummary
     {
         [Display(Name = "Steam ID", Description = "")]
         public string SteamID { get; set; }
