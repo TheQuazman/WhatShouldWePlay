@@ -89,9 +89,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
             {
                 //Storing the response details recieved from web api   
                 var friendsResponseContent = response.Content.ReadAsStringAsync().Result;
-
                 JObject friendsJsonObject = JsonConvert.DeserializeObject<JObject>(friendsResponseContent);
-
                 string friendsJsonString = friendsJsonObject["friendslist"]["friends"].ToString();
 
                 //Deserializing the response recieved from web api and storing into the Employee list  
@@ -111,7 +109,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
             var steamUsers = new List<PlayerSummary>();
             var steamIdArgStrings = new List<string>();
 
-            //Can only pass 100 steam ID's at a time, so iterate through until entire friends list is taken care of
+            //Can only pass 100 steam ID's at a time, so iterate through until entire list of ID's are processed
             for (int i = 0; i < steamIds.Count(); i += 100)
             {
                 //Using Skip and Take to take 100 item slices of the entire Steam ID list passed in
@@ -125,9 +123,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                 {
                     //Storing the response details recieved from web api   
                     var steamUsersResponseContent = response.Content.ReadAsStringAsync().Result;
-
                     JObject steamUsersJsonObject = JsonConvert.DeserializeObject<JObject>(steamUsersResponseContent);
-
                     string steamUsersJsonString = steamUsersJsonObject["response"]["players"].ToString();
 
                     //Deserializing the response recieved from web api and storing into the Employee list  
