@@ -1,45 +1,39 @@
 ﻿@model IEnumerable<WhatShouldWePlayMVCNoAuth.Models.PlayerSummary>  
   
 @{  
-    ViewBag.Title = "Friends";  
+    ViewBag.Title = "Friends";
 }  
-  
-<div class="form-horizontal">  
-  
-    <hr />  
-    <div class="form-group">  
-  
-  
-        <table class="table table-responsive" style="width:400px">  
-            <tr>  
-                <th>  
-                    @Html.DisplayNameFor(model => model.SteamID)  
-                </th>  
-                <th>  
-                    @Html.DisplayNameFor(model => model.Avatar)  
-                </th>
-                <th>  
-                    @Html.DisplayNameFor(model => model.PersonaName)
-                </th>  
-                  
-            </tr>  
-  
-            @for (var i = 0; i < Model.Count(); i++)
+ 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+</head>
+
+<body class="text-center" style="text-align:center;width:auto">
+    <hr/>
+    <div class="form-horizontal" style="text-align:center;width:auto">
+        <div class="form-group" style="text-align:center;width:auto">  
+            @using (@Html.BeginForm("Games", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {@style = "text-align:center;width:auto" }))
             {
-                <tr>
-                    <td>
-                        <input type="checkbox" value="Model.ElementAt(i).SteamID"/>
-                    </td>
-                    <td>
-                        <img src="@Html.DisplayFor(modelItem => Model.ElementAt(i).Avatar)" alt="@Html.DisplayNameFor(model => model.Avatar)"/> 
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => Model.ElementAt(i).PersonaName)  
-                    </td>
-                </tr>
+                <table class="table table-condensed" style="text-align:center;width:auto">  
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="SteamIds" value="@Html.DisplayFor(modelItem => Model.ElementAt(i).SteamID)"/>
+                            </td>
+                            <td>
+                                <img src="@Html.DisplayFor(modelItem => Model.ElementAt(i).Avatar)"/> 
+                            </td>
+                            <td style="text-align:left;">
+                                @Html.DisplayFor(modelItem => Model.ElementAt(i).PersonaName)  
+                            </td>
+                        </tr>
+                        }
+                </table>
+
+                <button type="submit" class="btn btn-primary">Get Games!</button>
             }
-
-
-        </table>
+        </div>
     </div>
-</div>
+</body>

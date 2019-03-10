@@ -10,7 +10,7 @@ namespace WhatShouldWePlayMVCNoAuth.Models
     public class Friend
     {
         [Display(Name = "Steam ID", Description = "")]
-        public string SteamId { get; set; }
+        public string SteamID { get; set; }
         [Display(Name = "Relationship", Description = "")]
         public string Relationship { get; set; }
         [Display(Name = "Friend Since", Description = "")]

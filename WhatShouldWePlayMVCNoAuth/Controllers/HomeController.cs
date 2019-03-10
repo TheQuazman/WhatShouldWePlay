@@ -69,8 +69,62 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         public async Task<ActionResult> Friends()
         {
             var friends = await GetFriendList();
-            var userSummaries = await GetPlayerSummaries(friends.Select(f => f.SteamId));
+            var userSummaries = await GetPlayerSummaries(friends.Select(f => f.SteamID));
             return View(userSummaries);
+        }
+
+        public async Task<ActionResult> Games(FormCollection collection)
+        {
+            var steamIDs = collection["SteamIds"];
+            steamIDs += string.Format(",{0}", _steamId);
+
+            //Get the intersection of all games owned by a list of Steam users
+            var commonAppIds = new List<int>();
+            foreach(var steamID in steamIDs.Split(','))
+            {
+                //Send request to get Steam users' owned games
+                var response = await _httpClient.GetAsync(string.Format("IPlayerService/GetOwnedGames/v1/?key={0}&steamid={1}", _key, steamID));
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (response.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var userOwnedAppsResponseContent = response.Content.ReadAsStringAsync().Result;
+                    JObject userOwnedAppsJsonObject = JsonConvert.DeserializeObject<JObject>(userOwnedAppsResponseContent);
+                    string userOwnedAppsJsonString = userOwnedAppsJsonObject["response"]["games"].ToString();
+
+                    var currentUserOwnedApps = JsonConvert.DeserializeObject<List<PlayerAppInfo>>(userOwnedAppsJsonString);
+                    //Deserializing the response recieved from web api and storing into the Employee list  
+                    if (commonAppIds.Count == 0)
+                        commonAppIds = currentUserOwnedApps.Select(c => c.AppID).ToList();
+                    else
+                        commonAppIds = commonAppIds.Intersect(currentUserOwnedApps.Select(c => c.AppID)).ToList();
+                }
+            }
+
+            var allAppDetails = new List<AppDetails>();
+            foreach (var appID in commonAppIds)
+            {
+                /* Send request to get game deatils
+                 * The request used to be able to get details of multiple games by passing in a comma delimited list of App ID's, but doesn't seem
+                 * to be working at the time of developing this. */
+                var response = await _httpClient.GetAsync(string.Format("http://store.steampowered.com/api/appdetails/?appids={0}&filters=basic&type=game", appID.ToString()));
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (response.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var userOwnedAppsResponseContent = response.Content.ReadAsStringAsync().Result;
+                    JObject userOwnedAppsJsonObject = JsonConvert.DeserializeObject<JObject>(userOwnedAppsResponseContent);
+                    string userOwnedAppsJsonString = userOwnedAppsJsonObject[appID.ToString()]["data"].ToString();
+
+                    var appDetails = JsonConvert.DeserializeObject<AppDetails>(userOwnedAppsJsonString);
+
+                    allAppDetails.Add(appDetails);
+                }
+            }
+
+            return View(allAppDetails);
         }
 
         /// <summary>
@@ -81,7 +135,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         {
             var friends = new List<Friend>();
 
-            //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
+            //Send request to get the logged in Steam user's friend list 
             var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetFriendList/v1/?key={0}&steamid={1}", _key, _steamId));
 
             //Checking the response is successful or not which is sent using HttpClient  
@@ -90,9 +144,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                 //Storing the response details recieved from web api   
                 var friendsResponseContent = response.Content.ReadAsStringAsync().Result;
                 JObject friendsJsonObject = JsonConvert.DeserializeObject<JObject>(friendsResponseContent);
-                string friendsJsonString = friendsJsonObject["friendslist"]["friends"].ToString();
-
-                //Deserializing the response recieved from web api and storing into the Employee list  
+                string friendsJsonString = friendsJsonObject["friendslist"]["friends"].ToString(); 
                 friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJsonString);
             }
 
@@ -125,8 +177,6 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                     var steamUsersResponseContent = response.Content.ReadAsStringAsync().Result;
                     JObject steamUsersJsonObject = JsonConvert.DeserializeObject<JObject>(steamUsersResponseContent);
                     string steamUsersJsonString = steamUsersJsonObject["response"]["players"].ToString();
-
-                    //Deserializing the response recieved from web api and storing into the Employee list  
                     steamUsers.AddRange(JsonConvert.DeserializeObject<List<PlayerSummary>>(steamUsersJsonString));
                 }
             }
