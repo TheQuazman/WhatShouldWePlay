@@ -19,6 +19,8 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         private static HttpClient _httpClient;
         private static string _steamId;
         private readonly string _key = ConfigurationManager.AppSettings["SteamAPIKey"];
+        private string _userName;
+        private readonly string _userAvatar;
 
         public ActionResult Index()
         {
@@ -70,6 +72,8 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         {
             var friends = await GetFriendList();
             var userSummaries = await GetPlayerSummaries(friends.Select(f => f.SteamID));
+            List<int> preferences = new List<int> { 1, 2, 3, 4, 5, 6, 0 };
+            userSummaries = userSummaries.OrderBy(u => preferences.IndexOf(u.PersonaState)).ThenBy(u => u.PersonaName);
             return View(userSummaries);
         }
 
@@ -80,7 +84,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
 
             //Get the intersection of all games owned by a list of Steam users
             var commonAppIds = new List<int>();
-            foreach(var steamID in steamIDs.Split(','))
+            foreach (var steamID in steamIDs.Split(','))
             {
                 //Send request to get Steam users' owned games
                 var response = await _httpClient.GetAsync(string.Format("IPlayerService/GetOwnedGames/v1/?key={0}&steamid={1}", _key, steamID));
@@ -91,6 +95,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                     //Storing the response details recieved from web api   
                     var userOwnedAppsResponseContent = response.Content.ReadAsStringAsync().Result;
                     JObject userOwnedAppsJsonObject = JsonConvert.DeserializeObject<JObject>(userOwnedAppsResponseContent);
+
                     string userOwnedAppsJsonString = userOwnedAppsJsonObject["response"]["games"].ToString();
 
                     var currentUserOwnedApps = JsonConvert.DeserializeObject<List<PlayerAppInfo>>(userOwnedAppsJsonString);
@@ -99,6 +104,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                         commonAppIds = currentUserOwnedApps.Select(c => c.AppID).ToList();
                     else
                         commonAppIds = commonAppIds.Intersect(currentUserOwnedApps.Select(c => c.AppID)).ToList();
+
                 }
             }
 
@@ -116,15 +122,20 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                     //Storing the response details recieved from web api   
                     var userOwnedAppsResponseContent = response.Content.ReadAsStringAsync().Result;
                     JObject userOwnedAppsJsonObject = JsonConvert.DeserializeObject<JObject>(userOwnedAppsResponseContent);
-                    string userOwnedAppsJsonString = userOwnedAppsJsonObject[appID.ToString()]["data"].ToString();
-
-                    var appDetails = JsonConvert.DeserializeObject<AppDetails>(userOwnedAppsJsonString);
-
-                    allAppDetails.Add(appDetails);
+                    try
+                    {
+                        string userOwnedAppsJsonString = userOwnedAppsJsonObject[appID.ToString()]["data"].ToString();
+                        var appDetails = JsonConvert.DeserializeObject<AppDetails>(userOwnedAppsJsonString);
+                        allAppDetails.Add(appDetails);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
             }
 
-            return View(allAppDetails);
+            return View(allAppDetails.OrderBy(a => a.Name));
         }
 
         /// <summary>

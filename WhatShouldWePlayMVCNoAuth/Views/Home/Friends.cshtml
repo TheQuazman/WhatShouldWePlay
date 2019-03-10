@@ -9,13 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
 </head>
 
-<body class="text-center" style="text-align:center;width:auto">
+<body class="text-center" style="text-align:center;width:auto;background:#1b2838;color:white">
     <hr/>
-    <div class="form-horizontal" style="text-align:center;width:auto">
-        <div class="form-group" style="text-align:center;width:auto">  
-            @using (@Html.BeginForm("Games", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {@style = "text-align:center;width:auto" }))
+    <div class="form-horizontal" style="text-align:center;width:auto;border:none">
+        <div class="form-group" style="text-align:center;width:auto;border:none">  
+            @using (@Html.BeginForm("Games", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {@style = "text-align:center;width:auto;color:white;border:none" }))
             {
-                <table class="table table-condensed" style="text-align:center;width:auto">  
+                <table class="table table-condensed" style="text-align:center;width:auto;color:white;border:none">  
                     @for (var i = 0; i < Model.Count(); i++)
                     {
                         <tr>
