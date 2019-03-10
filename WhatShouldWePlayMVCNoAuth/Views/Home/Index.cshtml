@@ -12,6 +12,9 @@
     <link href="~/Content/signin.css" rel="stylesheet">
   </head>
     <body class="text-center" style="background:#1b2838;color:white">
+        Welcome to What Should We Play?!<br />
+        Sign in, choose your steam friends that you are looking to play a game
+        with, and get a list of games you all have in common!
         @using (@Html.BeginForm("SteamLogin", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
         {
             <img class="mb-4" src="~/Content/steam-logo.png" alt="" width="200 height="200"/>
