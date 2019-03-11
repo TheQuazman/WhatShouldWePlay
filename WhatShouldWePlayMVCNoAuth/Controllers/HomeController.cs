@@ -17,10 +17,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
     public class HomeController : Controller
     {
         private static HttpClient _httpClient;
-        private static string _steamId;
         private readonly string _key = ConfigurationManager.AppSettings["SteamAPIKey"];
-        private string _userName;
-        private readonly string _userAvatar;
 
         public ActionResult Index()
         {
@@ -45,8 +42,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
                     case AuthenticationStatus.Authenticated:
                         // do success
                         var responseURI = response.ClaimedIdentifier.ToString();
-                        _steamId = responseURI.Split('/').Last();
-                        ViewBag.Message = "Your steam ID = " + _steamId;
+                        Session["SteamID"] = responseURI.Split('/').Last();
                         //"http://steamcommunity.com/openid/id/76561197969877387"
                         // last part is steam user id
                         return RedirectToAction("Friends");
@@ -80,7 +76,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
         public async Task<ActionResult> Games(FormCollection collection)
         {
             var steamIDs = collection["SteamIds"];
-            steamIDs += string.Format(",{0}", _steamId);
+            steamIDs += string.Format(",{0}", Session["SteamID"]);
 
             //Get the intersection of all games owned by a list of Steam users
             var commonAppIds = new List<int>();
@@ -147,7 +143,7 @@ namespace WhatShouldWePlayMVCNoAuth.Controllers
             var friends = new List<Friend>();
 
             //Send request to get the logged in Steam user's friend list 
-            var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetFriendList/v1/?key={0}&steamid={1}", _key, _steamId));
+            var response = await _httpClient.GetAsync(string.Format("ISteamUser/GetFriendList/v1/?key={0}&steamid={1}", _key, Session["SteamID"]));
 
             //Checking the response is successful or not which is sent using HttpClient  
             if (response.IsSuccessStatusCode)
