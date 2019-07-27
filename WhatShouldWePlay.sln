@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatShouldWePlayMVCNoAuth", "WhatShouldWePlayMVCNoAuth\WhatShouldWePlayMVCNoAuth.csproj", "{F58587B4-09DF-4C94-9AE6-3F221825A91F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatShouldWePlayAngular", "WhatShouldWePlayAngular\WhatShouldWePlayAngular.csproj", "{B0121E6E-0C0A-4307-9273-4B88A9C9D52D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatShouldWePlayAngular", "WhatShouldWePlayAngular\WhatShouldWePlayAngular.csproj", "{487AB54D-D188-43D7-97AF-1338B2BEA316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F58587B4-09DF-4C94-9AE6-3F221825A91F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58587B4-09DF-4C94-9AE6-3F221825A91F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58587B4-09DF-4C94-9AE6-3F221825A91F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0121E6E-0C0A-4307-9273-4B88A9C9D52D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0121E6E-0C0A-4307-9273-4B88A9C9D52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0121E6E-0C0A-4307-9273-4B88A9C9D52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0121E6E-0C0A-4307-9273-4B88A9C9D52D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
