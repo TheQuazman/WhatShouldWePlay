@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatShouldWePlayMVCNoAuth", "WhatShouldWePlayMVCNoAuth\WhatShouldWePlayMVCNoAuth.csproj", "{F58587B4-09DF-4C94-9AE6-3F221825A91F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatShouldWePlayAngular", "WhatShouldWePlayAngular\WhatShouldWePlayAngular.csproj", "{487AB54D-D188-43D7-97AF-1338B2BEA316}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhatShouldWePlayAngular", "WhatShouldWePlayAngular\WhatShouldWePlayAngular.csproj", "{487AB54D-D188-43D7-97AF-1338B2BEA316}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamApiClient", "SteamApiClient\SteamApiClient.csproj", "{92355DB7-5067-4A44-A1C5-1C425F9F51F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{487AB54D-D188-43D7-97AF-1338B2BEA316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92355DB7-5067-4A44-A1C5-1C425F9F51F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92355DB7-5067-4A44-A1C5-1C425F9F51F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92355DB7-5067-4A44-A1C5-1C425F9F51F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92355DB7-5067-4A44-A1C5-1C425F9F51F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
